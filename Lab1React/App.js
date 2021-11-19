@@ -7,30 +7,33 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
+//import type {Node} from 'react';
+import  {Node} from 'react';
 import {
   Button,
   Image,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+  //SafeAreaView,
+  //ScrollView,
+  //StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  //DebugInstructions,
+  //Header,
+  //LearnMoreLinks,
+  //ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import { wrap } from 'yargs';
+import { whileStatement } from '@babel/types';
 
 
-const MyButton = ({text, color}): Node =>{
+/*const MyButton = ({text, color}): Node =>{
   return (
     <Button
       title={text}
@@ -39,6 +42,10 @@ const MyButton = ({text, color}): Node =>{
       >
       </Button>
   )
+}*/
+
+const SpecificButton = ({}): Node => {
+  return <Button title="Button" color={buttonColor} />
 }
 
 const App: () => Node = () => {
@@ -50,6 +57,8 @@ const App: () => Node = () => {
 
   return (
     <View style = {{flex: 1, flexDirection: "column"}}>
+
+      {/* Container for image */}
       <View style = {styles.imageContainer}>
         <Image
           style = {styles.image}
@@ -57,20 +66,28 @@ const App: () => Node = () => {
         />
       </View>
 
+      {/* Container for buttons */}
       <View style = {styles.buttonGrid}>
-        <View style={[{backgroundColor: "red"}, styles.buttonRow]}>
-          <Button title="Button" color={buttonColor} />
-          <Button title="Button" color={buttonColor}/>
+        <View style={styles.buttonRow}>
+          <SpecificButton/>
+          <SpecificButton/>
         </View>
 
         <View style={styles.buttonRow}>
-          <Button title="Button" color={buttonColor}/>
-          <Button title="Button" color={buttonColor}/>
+          <SpecificButton/>
+          <SpecificButton/>
         </View>
         
       </View>
-      <View style = {styles.inputContainer}>
 
+      {/* Container for email input */}
+      <View style = {styles.inputContainer}>
+        <Text style={styles.text}>Email:</Text>
+
+        {/* Container for input field, to specify width and alignment */}
+        <View style={styles.inputFieldContainer}>
+          <TextInput style={styles.inputField}></TextInput>
+        </View>
       </View>
     </View>
   );
@@ -80,36 +97,56 @@ const buttonColor = "gray";
 
 const styles = StyleSheet.create({
   imageContainer: {
-    backgroundColor: "pink",
-    flex: 1
+    //backgroundColor: "pink",
+    padding: 10,
+    flex: 1,
   },
   buttonGrid: {
-    backgroundColor: "green",
+    //backgroundColor: "green",
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-evenly",
   },
   buttonRow: {
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
   inputContainer: {
-    backgroundColor: "purple",
+    //backgroundColor: "purple",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent:"space-around",
     flex: 2
   },
   icon: {
     height: "50",
     width: "50"
   },
-  button: {
-    backgroundColor: "red"
-    //height: "10%",
-    //width: "50%",
-  },
   image: {
-    //width: "50px",
-    //height: "50px"
+    flex: 1, //to get the correct size of the image
+    width: null,
+    heigh: null,
+    resizeMode: 'contain', //resize to fit parent's size?
+  },
+  text: {
+    //backgroundColor: "red",
+    color: "black",
+    alignSelf: 'flex-end',
+  },
+  inputField: {
+    //backgroundColor: "yellow",
+    borderBottomWidth: 1,
+    width: "80%", //Width of the wrapping container (View)
+    paddingBottom: 0,
+    //alignSelf: "center",
+  },
+  //Wraps the input field and enables more customized width
+  // while the starting point of the input field stays the same
+  inputFieldContainer: {
+    //backgroundColor: "indigo",
+    width: "70%",
+
   },
 });
 

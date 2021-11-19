@@ -46,7 +46,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  /*int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -57,15 +57,16 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-  }
+  }*/
 
   //Method to create the buttons
   TextButton _myButton() {
+    //Går det att få större knapp utan att öka textstorleken?
     TextStyle textStyle = TextStyle(fontSize: 18.0);
 
     //Define style for button
     ButtonStyle style = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade300),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade400),
       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
       textStyle: MaterialStateProperty.all<TextStyle>(textStyle),
     );
@@ -103,7 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Image icon = new Image.asset('assets/Education-Wheel-Woofer.png');
+    Image icon = new Image.asset(
+      'assets/Education-Wheel-Woofer.png',
+      width: MediaQuery.of(context).size.width / 2,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -115,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center(
           child: Column(
             //The widgets in the column are centered vertically
-            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //Using Expanded widgets to wrap the other elements, to be able to use the flex property
               //child 1: image
@@ -137,7 +141,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Email"),
+                    Container(
+                      child: Text("Email"),
+                    ),
                     //TODO: Check why this field is lower than the text to the left of it
                     //TextFormField wrapped with Expanded, otherwise it doesn't work
                     Expanded(
