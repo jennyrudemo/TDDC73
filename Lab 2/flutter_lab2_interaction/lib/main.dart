@@ -57,57 +57,143 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CreditCardWidget(
-              cardNumber: cardNumber,
-              expiryDate: expiryDate,
-              cardHolderName: cardHolderName,
-              cvvCode: cvvCode,
-              showBackView:
-                  isCvvFocused, //true when you want to show cvv(back) view
-              //backgroundImage: 'assets/card_bg.png',
-              //obscureCardNumber: false,
-              isHolderNameVisible: true,
-              isChipVisible: true,
-              onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
-            ),
-            CreditCardForm(
-              cardHolderName: cardHolderName,
-              expiryDate: expiryDate,
-              cardNumber: cardNumber,
-              cvvCode: cvvCode,
-              formKey: formKey, // Required
-              onCreditCardModelChange: (CreditCardModel data) {}, // Required
-              themeColor: Colors.red,
-              obscureCvv: true,
-              obscureNumber: true,
-              isHolderNameVisible: true,
-              isCardNumberVisible: true,
-              isExpiryDateVisible: true,
-              cardNumberDecoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Number',
-                hintText: 'XXXX XXXX XXXX XXXX',
+      //Fixes the problem with overflow and not seeing the bottom input fields
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CreditCardWidget(
+                cardNumber: cardNumber,
+                expiryDate: expiryDate,
+                cardHolderName: cardHolderName,
+                cvvCode: cvvCode,
+                showBackView:
+                    isCvvFocused, //true when you want to show cvv(back) view
+                backgroundImage: 'images/21.jpeg',
+                obscureCardCvv: false,
+                obscureCardNumber: false,
+                isHolderNameVisible: true,
+                isChipVisible: true,
+                onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
+                customCardTypeIcons: [
+                  // Mastercard
+                  CustomCardTypeIcon(
+                    cardType: CardType.mastercard,
+                    cardImage: Image.asset(
+                      'images/mastercard.png',
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),
+                  // Amex
+                  CustomCardTypeIcon(
+                    cardType: CardType.americanExpress,
+                    cardImage: Image.asset(
+                      'images/amex.png',
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),
+                  // Diners Club
+                  /*CustomCardTypeIcon(
+                    cardType: CardType.dinersclub,
+                    cardImage: Image.asset(
+                      'images/dinerclub.png',
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),*/
+                  // Discover
+                  CustomCardTypeIcon(
+                    cardType: CardType.discover,
+                    cardImage: Image.asset(
+                      'images/discover.png',
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),
+                  // JCB
+                  // CustomCardTypeIcon(
+                  //   cardType: CardType.jcb,
+                  //   cardImage: Image.asset(
+                  //     'images/jcb.png',
+                  //     height: 48,
+                  //     width: 48,
+                  //   ),
+                  // ),
+                  // Troy
+                  // CustomCardTypeIcon(
+                  //   cardType: CardType.troy,
+                  //   cardImage: Image.asset(
+                  //     'images/troy.png',
+                  //     height: 48,
+                  //     width: 48,
+                  //   ),
+                  // ),
+                  // Union Pay
+                  // CustomCardTypeIcon(
+                  //   cardType: CardType.unionpay,
+                  //   cardImage: Image.asset(
+                  //     'images/unionpay.png',
+                  //     height: 48,
+                  //     width: 48,
+                  //   ),
+                  // ),
+                  // Visa
+                  CustomCardTypeIcon(
+                    cardType: CardType.visa,
+                    cardImage: Image.asset(
+                      'images/visa.png',
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),
+                ],
               ),
-              expiryDateDecoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Expired Date',
-                hintText: 'XX/XX',
+              CreditCardForm(
+                cardHolderName: cardHolderName,
+                expiryDate: expiryDate,
+                cardNumber: cardNumber,
+                cvvCode: cvvCode,
+                formKey: formKey, // Required
+                onCreditCardModelChange: (CreditCardModel data) {
+                  setState(() {
+                    cardHolderName = data.cardHolderName;
+                    cvvCode = data.cvvCode;
+                    expiryDate = data.expiryDate;
+                    cardNumber = data.cardNumber;
+                    isCvvFocused = data.isCvvFocused;
+                  });
+                }, // Required
+                themeColor: Colors.red,
+                obscureCvv: true,
+                obscureNumber: false,
+                isHolderNameVisible: true,
+                isCardNumberVisible: true,
+                isExpiryDateVisible: true,
+                cardNumberDecoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Number',
+                  hintText: 'XXXX XXXX XXXX XXXX',
+                ),
+                expiryDateDecoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Expired Date',
+                  hintText: 'MM/YY',
+                ),
+                cvvCodeDecoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'CVV',
+                  hintText: 'XXX',
+                ),
+                cardHolderDecoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Card Holder',
+                ),
               ),
-              cvvCodeDecoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'CVV',
-                hintText: 'XXX',
-              ),
-              cardHolderDecoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Card Holder',
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
