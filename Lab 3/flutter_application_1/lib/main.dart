@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'fetchmore/main.dart';
+//import 'fetchmore/main.dart';
 
-String get host {
+/*String get host {
   if (Platform.isAndroid) {
     return '10.0.2.2';
   } else {
     return 'localhost';
   }
-}
+}*/
 
 void main() async {
   await initHiveForFlutter();
@@ -34,17 +34,42 @@ void main() async {
     ),
   );
 
-  runApp(const MyApp());
+  runApp(
+    GraphQLProvider(
+      client: client,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(title: 'Lab 3'),
+      ),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+String readRepositories = """
+  query ReadRepositories(\$nRepositories: Int!) {
+    viewer {
+      repositories(last: \$nRepositories) {
+        nodes {
+          id
+          name
+          viewerHasStarred
+        }
+      }
+    }
+  }
+""";
+
+/*class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
-      //client: client,
+      client: client,
       //linking fungerar ej
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -55,7 +80,7 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -83,11 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             pollInterval: Duration(seconds: 10),
           ),
-
           // Just like in apollo refetch() could be used to manually trigger a refetch
           // while fetchMore() can be used for pagination purpose
           builder: (QueryResult result,
-              {VoidCallback refetch, FetchMore fetchMore}) {
+              {required FetchMore fetchMore, required VoidCallback refetch}) {
             if (result.hasException) {
               return Text(result.exception.toString());
             }
