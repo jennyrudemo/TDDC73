@@ -62,7 +62,7 @@ String readRepositories = """
   }
 """;
 
-/*class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -80,7 +80,7 @@ String readRepositories = """
       ),
     );
   }
-}*/
+}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -104,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
             document: gql(
                 readRepositories), // this is the query string you just created
             variables: {
-              'nRepositories': 50,
+              'nRepositories':
+                  50, //querystring : 'language $selectedlanguage stars: >1000
             },
             pollInterval: Duration(seconds: 10),
           ),
@@ -129,10 +130,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   final repository = repositories[index];
 
                   return Text(repository['name']);
+                  //här kan man returnera ett kort genom card.dart
                 });
           },
         ),
       ),
+
+      //lägga till en container
     );
   }
 }
