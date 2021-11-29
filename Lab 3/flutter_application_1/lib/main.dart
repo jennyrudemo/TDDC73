@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
 //import 'fetchmore/main.dart';
-
-/*String get host {
-  if (Platform.isAndroid) {
-    return '10.0.2.2';
-  } else {
-    return 'localhost';
-  }
-}*/
-
 void main() async {
   await initHiveForFlutter();
 
@@ -34,18 +26,9 @@ void main() async {
     ),
   );
 
-  runApp(
-    GraphQLProvider(
-      client: client,
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const MyHomePage(title: 'Lab 3'),
-      ),
-    ),
-  );
+  var app = GraphQLProvider(client: client, child: const MyApp());
+
+  runApp(app);
 }
 
 String readRepositories = """
@@ -68,16 +51,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-      client: client,
-      //linking fungerar ej
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const MyHomePage(title: 'Lab 3'),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: const MyHomePage(title: 'Lab 3'),
     );
   }
 }
@@ -112,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // Just like in apollo refetch() could be used to manually trigger a refetch
           // while fetchMore() can be used for pagination purpose
           builder: (QueryResult result,
-              {required FetchMore fetchMore, required VoidCallback refetch}) {
+              {FetchMore? fetchMore, VoidCallback? refetch}) {
             if (result.hasException) {
               return Text(result.exception.toString());
             }
@@ -122,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }
 
             // it can be either Map or List
-            List repositories = result.data['viewer']['repositories']['nodes'];
+            List repositories = result.data?['viewer']['repositories']['nodes'];
 
             return ListView.builder(
                 itemCount: repositories.length,
