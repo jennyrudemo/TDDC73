@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:dio/dio.dart';
+
+void getHttp() async {
+  try {
+    var response = await Dio().get('https://api.github.com/graphql');
+    print(response);
+  } catch (e) {
+    print(e);
+  }
+}
 
 //import 'fetchmore/main.dart';
 void main() async {
@@ -13,7 +23,7 @@ void main() async {
 
   final AuthLink authLink = AuthLink(
     getToken: () async =>
-        'Bearer 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', //ändra denna från token
+        'Bearer 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', //ändra denna från token
     // OR
     // getToken: () => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
   );
