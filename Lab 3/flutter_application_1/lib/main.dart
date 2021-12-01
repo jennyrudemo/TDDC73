@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:dio/dio.dart';
 
-void getHttp() async {
-  try {
-    var response = await Dio().get('https://api.github.com/graphql');
-    print(response);
-  } catch (e) {
-    print(e);
-  }
-}
+// void getHttp() async {
+//   try {
+//     var response = await Dio().get('https://api.github.com/graphql');
+//     print(response);
+//   } catch (e) {
+//     print(e);
+//   }
+//}
 
 //import 'fetchmore/main.dart';
 void main() async {
@@ -23,7 +23,7 @@ void main() async {
 
   final AuthLink authLink = AuthLink(
     getToken: () async =>
-        'Bearer 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', //ändra denna från token
+        'Bearer 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', //ändra denna från token
     // OR
     // getToken: () => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
   );
@@ -42,20 +42,6 @@ void main() async {
 
   runApp(app);
 }
-
-String readRepositories = """
-  query ReadRepositories(\$nRepositories: Int!) {
-    viewer {
-      repositories(last: \$nRepositories) {
-        nodes {
-          id
-          name
-          viewerHasStarred
-        }
-      }
-    }
-  }
-""";
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -83,6 +69,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var selectedLanguage = 'Python';
+  List<String> languageList = [
+    'Python',
+    'Java',
+    'C++',
+    'TypeScript',
+    'C',
+    'Ruby',
+    'C#',
+    'PHP',
+  ];
+
+  void _setSelectedLanguage(String newLang) {
+    setState(() {
+      selectedLanguage = newLang;
+    });
+  }
+
+  String readRepositories = """
+    query ReadRepositories (\$queryString: String!) {
+      search(query: \$queryString, type: REPOSITORY, first: 10) {
+        nodes {
+          ... on Repository {
+            id
+            name
+            url
+             owner {
+              url
+            }
+            stargazers {
+              totalCount
+            }
+            
+           
+  
+            
+          }
+        }
+      }
+      
+  }
+     """;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,8 +126,10 @@ class _MyHomePageState extends State<MyHomePage> {
             variables: {
               'nRepositories':
                   50, //querystring : 'language $selectedlanguage stars: >1000
+              'queryString':
+                  'sort:stars-desc language: $selectedLanguage stars:>1000',
             },
-            pollInterval: Duration(seconds: 10),
+            pollInterval: const Duration(seconds: 10),
           ),
           // Just like in apollo refetch() could be used to manually trigger a refetch
           // while fetchMore() can be used for pagination purpose
@@ -113,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }
 
             // it can be either Map or List
-            List repositories = result.data?['viewer']['repositories']['nodes'];
+            List repositories = result.data?['search']['nodes'];
 
             return ListView.builder(
                 itemCount: repositories.length,
