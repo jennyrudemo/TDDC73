@@ -21,8 +21,7 @@ void main() async {
   //hej
 
   final AuthLink authLink = AuthLink(
-    getToken: () async =>
-        'Bearer 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', //ändra denna från token
+    getToken: () async => 'Bearer  <TOKEN>', //Add own personal access token
     // OR
     // getToken: () => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
   );
@@ -77,8 +76,8 @@ class DetailedInfo extends StatelessWidget {
   String title = "";
   String description = "";
   String licens = "";
-  int commits = 0;
-  int branches = 0;
+  String commits = "";
+  String branches = "";
 
   @override
   //State<StatelessWidget> createState() => _DetailedInfo();
@@ -128,15 +127,15 @@ class DetailedInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      licens,
+                      licens.isEmpty ? "" : licens,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Text(
-                      commits.toString(),
+                      commits,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Text(
-                      branches.toString(),
+                      branches,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   ],
@@ -235,11 +234,20 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(
                 builder: (context) => DetailedInfo(
+                      //Perform checks to see that content is not null
                       title: repository['name'],
                       description: repository['description'],
-                      licens: repository['licenseInfo']['name'],
-                      commits: repository['object']['history']['totalCount'],
-                      branches: repository['refs']['totalCount'],
+                      licens: repository['licenseInfo'] == null
+                          ? "-"
+                          : repository['licenseInfo']['name'],
+                      commits: repository['object'] == null ||
+                              repository['object']['history'] == null
+                          ? "-"
+                          : repository['object']['history']['totalCount']
+                              .toString(),
+                      branches: repository['refs'] == null
+                          ? "-"
+                          : repository['refs']['totalCount'].toString(),
                     )));
       },
       child: Container(
@@ -315,10 +323,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   document: gql(
                       readRepositories), // this is the query string you just created
                   variables: {
-                    'nRepositories':
-                        50, //querystring : 'language $selectedlanguage stars: >1000
+                    /*'nRepositories':
+                        50,*/ //querystring : 'language $selectedlanguage stars: >1000
                     'queryString':
-                        'sort:stars-desc language: $selectedLanguage stars:>1000',
+                        'sort:stars-desc language: $selectedLanguage stars:>10000',
                   },
                   pollInterval: const Duration(seconds: 10),
                 ),
