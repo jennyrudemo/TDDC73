@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/account_registration.dart';
 import 'package:flutter_project/password.dart';
 
 void main() {
@@ -38,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: const PasswordForm(),
+      //body: AccountRegistration(),
     );
   }
 }
