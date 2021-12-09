@@ -38,8 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const PasswordForm(),
-      //body: AccountRegistration(),
+      //body: const PasswordForm(),
+      body: AccountRegistration(
+        birthDateLabel: "Födelsedatum",
+        onButtonClick: () {
+          print('Nothing happens, this is just a sample application');
+        },
+      ),
     );
   }
 }
