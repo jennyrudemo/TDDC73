@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Project'),
     );
   }
 }
@@ -31,6 +31,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+String example = "";
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+
       //body: const PasswordForm(),
       body: AccountRegistration(
         birthDateLabel: "Födelsedatum",
@@ -45,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
           print('Nothing happens, this is just a sample application');
         },
       ),
+      // PasswordForm( password: ""), //TODO: Lägg in denna så att den fungerar med accountregistration
+      //body: AccountRegistration(),
     );
   }
 }
