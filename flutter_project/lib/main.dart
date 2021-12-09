@@ -31,6 +31,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+String example = "";
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const PasswordForm(),
+      body: const PasswordForm(
+        password: '',
+      ),
       //body: AccountRegistration(),
     );
   }
