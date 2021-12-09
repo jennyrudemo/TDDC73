@@ -5,7 +5,7 @@
 
 // import 'src/estimate_bruteforce_strength.dart';
 
-// class FlutterPasswordStrength extends StatefulWidget {
+// class PasswordStrength extends StatefulWidget {
 //   final String? password;
 
 //   //Strength bar width
@@ -29,7 +29,7 @@
 //   //Strength callback
 //   final void Function(double strength)? strengthCallback;
 
-//   const FlutterPasswordStrength(
+//   const PasswordStrength(
 //       {Key? key,
 //       required this.password,
 //       this.width,
@@ -86,7 +86,7 @@
 //       _FlutterPasswordStrengthState();
 // }
 
-// class _FlutterPasswordStrengthState extends State<FlutterPasswordStrength>
+// class _FlutterPasswordStrengthState extends State<PasswordStrength>
 //     with SingleTickerProviderStateMixin {
 //   //Animation controller for strength bar
 //   late AnimationController _animationController;
@@ -176,7 +176,7 @@
 //   }
 
 //   @override
-//   void didUpdateWidget(FlutterPasswordStrength oldWidget) {
+//   void didUpdateWidget(PasswordStrength oldWidget) {
 //     super.didUpdateWidget(oldWidget);
 
 //     if (oldWidget.password != widget.password) {
