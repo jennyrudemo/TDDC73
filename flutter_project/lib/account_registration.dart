@@ -2,9 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:flutter/services.dart';
 import 'package:dropdown_date_picker/dropdown_date_picker.dart';
+//import 'package:flutter/services.dart';
+import 'package:flutter_project/password.dart';
 
 class AccountRegistration extends StatefulWidget {
   AccountRegistration({
@@ -16,6 +17,12 @@ class AccountRegistration extends StatefulWidget {
     this.genderList = defaultGenderList,
     this.genderLabel = defaultGenderLabel,
     this.passwordDecoration = defaultPasswordDec,
+    this.isNameVisible = true,
+    this.isGenderVisible = true,
+    this.isBirthDateVisible = true,
+    this.isEmailVisible = true,
+    this.isPhoneNumberVisible = true,
+    this.isAgreementCheckVisible = true,
     this.dateHint = defaultDateHint,
     this.birthDateLabel = defaultBirthDateLabel,
     this.agreementText = defaultAgreementText,
@@ -32,6 +39,14 @@ class AccountRegistration extends StatefulWidget {
   final List<String> genderList;
   final String genderLabel;
   final InputDecoration passwordDecoration;
+  //Determine what fields should be shown
+  //username and password always visible
+  final bool isNameVisible;
+  final bool isGenderVisible;
+  final bool isBirthDateVisible;
+  final bool isEmailVisible;
+  final bool isPhoneNumberVisible;
+  final bool isAgreementCheckVisible;
   final DateHint dateHint;
   final String birthDateLabel;
   final String agreementText;
@@ -82,47 +97,71 @@ class AccountRegistration extends StatefulWidget {
 }
 
 class _AccountRegistration extends State<AccountRegistration> {
-  //@override
-  //AccountRegistration get widget;
-
   //TODO: fix this so it's more general
   //String selectedGender = widget.genderList[0];
   String selectedGender = "Female";
-  int selectedYear = DateTime.now().year;
-  //String selectedMonth = 'Jan';
-  //String selectedDay = '1';
   bool agreementAccepted = false;
-  bool buttonEnabled = false; //TODO: endast false om checkbox finns
+  String emailError = "";
+  bool emailValid = false;
 
-  TextField name() {
-    return TextField(decoration: widget.nameDecoration);
-  }
-
-  //TODO: behöver vi använda TextFormField (till skillnad från TextField)?
-  TextField username() {
-    return TextField(decoration: widget.usernameDecoration);
-  }
-
-  //TODO: implement email validator
-  //Make more general
-  /*TextFormField email() {
-    return TextFormField(
-      validator: (value) =>
-          EmailValidator.validate(value) ? null : "Please enter a valid email",
+  Padding name() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(decoration: widget.nameDecoration),
     );
-  }*/
-
-  TextField email() {
-    return TextField(decoration: widget.emailDecoration);
   }
 
-  //TODO: require numbers
-  TextField phoneNumber() {
-    return TextField(decoration: widget.phoneDecoration);
+  Padding username() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(decoration: widget.usernameDecoration),
+    );
+  }
+
+  Padding email() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
+      child: Column(
+        children: [
+          Text(emailError),
+          TextField(
+            decoration: widget.emailDecoration,
+            onChanged: (email) {
+              //Check if email address has valid format
+              setState(() {
+                if (email.isEmpty) {
+                  //emailValid = true;
+                } else {
+                  emailValid = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(email);
+                }
+
+                if (!emailValid && email.isNotEmpty) {
+                  emailError = "Email adress not valid";
+                } else {
+                  emailError = "";
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding phoneNumber() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: widget.phoneDecoration,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      ),
+    );
   }
 
   //Gender picker
-  Column gender() {
+  Padding gender() {
     List<String> genders = widget.genderList;
 
     List<DropdownMenuItem<String>> genderList =
@@ -133,61 +172,80 @@ class _AccountRegistration extends State<AccountRegistration> {
       );
     }).toList();
 
-    return Column(
-      children: [
-        Text(widget.genderLabel),
-        DropdownButton(
-          value: selectedGender,
-          items: genderList,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedGender = newValue!;
-            });
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.genderLabel),
+          DropdownButton(
+            value: selectedGender,
+            items: genderList,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedGender = newValue!;
+              });
+            },
+            isExpanded: true,
+          ),
+        ],
+      ),
     );
   }
 
   //PLACEHOLDER
   //TODO: use our own implemented password input instead
-  TextField password() {
-    return TextField(
-      decoration: widget.passwordDecoration,
+  Padding password() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: widget.passwordDecoration,
+      ),
     );
   }
 
+  /*PasswordForm password() {
+    return PasswordForm();
+  }*/
+
   //Birth date picker
-  Column birthdatePicker() {
+  Padding birthdatePicker() {
     int currentYear = DateTime.now().year;
     int currentMonth = DateTime.now().month;
     int currentDay = DateTime.now().day;
     int startYear = currentYear - 120;
 
-    return Column(
-      children: [
-        Text(widget.birthDateLabel),
-        DropdownDatePicker(
-          firstDate: ValidDate(year: startYear, month: 1, day: 1),
-          lastDate: ValidDate(
-              year: currentYear, month: currentMonth, day: currentDay),
-          dateHint: widget.dateHint,
-          ascending: false,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.birthDateLabel),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2,
+            child: DropdownDatePicker(
+              firstDate: ValidDate(year: startYear, month: 1, day: 1),
+              lastDate: ValidDate(
+                  year: currentYear, month: currentMonth, day: currentDay),
+              dateHint: widget.dateHint,
+              ascending: false,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Row checkBoxContainer() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      //mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Checkbox(
           value: agreementAccepted,
           onChanged: (bool? value) {
             setState(() {
               agreementAccepted = value!;
-              buttonEnabled = agreementAccepted;
+              //buttonEnabled = agreementAccepted;
             });
           },
         ),
@@ -198,12 +256,19 @@ class _AccountRegistration extends State<AccountRegistration> {
 
   //Button
   TextButton registerAccountButton() {
+    //If the agreement checkbox is not visible, the accepted variable is assumed true
+    if (!widget.isAgreementCheckVisible) {
+      agreementAccepted = true;
+    }
+
     return TextButton(
-      onPressed: buttonEnabled
+      //TODO: check for both agreement bool and password bool
+      onPressed: agreementAccepted && emailValid
           ? widget.onButtonClick
           : null, //enabled button only if it should be enabled
       child: Text(widget.buttonText),
       //TODO: get button style from constructor
+
       // style: ButtonStyle(
       //   backgroundColor:
       //       MaterialStateProperty.all(Theme.of(context).primaryColor),
@@ -216,20 +281,28 @@ class _AccountRegistration extends State<AccountRegistration> {
     //TODO: replace with actual content
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          name(),
-          username(),
-          email(),
-          phoneNumber(),
-          gender(),
-          password(),
-          birthdatePicker(),
-          checkBoxContainer(),
-          registerAccountButton(),
-          //Button to register
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //Name field
+            //TODO: bättre sätt att returnera inget?
+            widget.isNameVisible ? name() : Container(),
+            //Gender field
+            widget.isGenderVisible ? gender() : Container(),
+            //BirthDateField
+            widget.isBirthDateVisible ? birthdatePicker() : Container(),
+            //Email field
+            widget.isEmailVisible ? email() : Container(),
+            //Phone number field
+            widget.isPhoneNumberVisible ? phoneNumber() : Container(),
+            username(),
+            password(),
+            //Agreement checkbox
+            widget.isAgreementCheckVisible ? checkBoxContainer() : Container(),
+            registerAccountButton(),
+          ],
+        ),
       ),
     );
   }
