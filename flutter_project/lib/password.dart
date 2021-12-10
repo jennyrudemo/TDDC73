@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_password_strength/flutter_password_strength.dart';
 
 class PasswordForm extends StatefulWidget {
-  //final String? password;
+  final int minlength;
+  final int acceptablelength;
 
-  const PasswordForm({Key? key}) : super(key: key);
+  const PasswordForm(
+      {Key? key,
+      required this.minlength,
+      required this.acceptablelength,
+      passwordAcceptable})
+      : super(key: key);
 
   @override
   PasswordFormState createState() {
     return PasswordFormState();
   }
 }
+
+bool passwordAcceptable = false;
 
 class PasswordFormState extends State<PasswordForm> {
   // ignore: unused_field
@@ -72,14 +80,19 @@ class PasswordFormState extends State<PasswordForm> {
                 const SizedBox(
                   height: 50,
                 ),
-                ElevatedButton(
-                    onPressed: _strength < 1 / 2 ? null : () {},
-                    child: Text('Continue')),
               ]))
         ]);
   }
 
-  void _checkPassword(value) {
+  void checkOk() {
+    if (_strength < 1 / 2) {
+      passwordAcceptable = true;
+    }
+  }
+
+  void _checkPassword(
+    value,
+  ) {
     String _password = value.trim();
 
     if (_password.isEmpty) {
@@ -87,12 +100,12 @@ class PasswordFormState extends State<PasswordForm> {
         _strength = 0;
         _displayText = "Please enter your passwords";
       });
-    } else if (_password.length < 6) {
+    } else if (_password.length < widget.minlength) {
       setState(() {
         _strength = 1 / 4;
         _displayText = "Your Password is too short";
       });
-    } else if (_password.length < 8) {
+    } else if (_password.length < widget.acceptablelength) {
       setState(() {
         _strength = 2 / 4;
         _displayText = "Your Password is acceptable but not strong";
