@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_password_strength/flutter_password_strength.dart';
 
 class PasswordForm extends StatefulWidget {
-  final String? password;
+  //final String? password;
 
-  const PasswordForm({Key? key, required this.password}) : super(key: key);
+  const PasswordForm({Key? key}) : super(key: key);
 
   @override
   PasswordFormState createState() {
@@ -14,7 +14,7 @@ class PasswordForm extends StatefulWidget {
 
 class PasswordFormState extends State<PasswordForm> {
   // ignore: unused_field
-  //late String? _password = password;
+  //late String? _password = "";
   double _strength = 0;
 
   //String pattern =
@@ -36,7 +36,7 @@ class PasswordFormState extends State<PasswordForm> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Column(children: [
                 TextField(
-                    onChanged: (password) => _checkPassword(password),
+                    onChanged: (value) => _checkPassword(value),
                     //controller: passwordController,
                     //onChanged: validate(),
                     obscureText: true,
@@ -79,8 +79,8 @@ class PasswordFormState extends State<PasswordForm> {
         ]);
   }
 
-  void _checkPassword(password) {
-    String _password = password.trim();
+  void _checkPassword(value) {
+    String _password = value.trim();
 
     if (_password.isEmpty) {
       setState(() {
