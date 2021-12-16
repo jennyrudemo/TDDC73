@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:dropdown_date_picker/dropdown_date_picker.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_project/password.dart';
+import 'package:provider/provider.dart';
 
 class AccountRegistration extends StatefulWidget {
   AccountRegistration({
@@ -103,6 +104,7 @@ class _AccountRegistration extends State<AccountRegistration> {
   bool agreementAccepted = false;
   String emailError = "";
   bool emailValid = false;
+  bool passwordAccepted = false;
 
   Padding name() {
     return Padding(
@@ -195,18 +197,21 @@ class _AccountRegistration extends State<AccountRegistration> {
 
   //PLACEHOLDER
   //TODO: use our own implemented password input instead
-  Padding password() {
+  /*Padding password() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
         decoration: widget.passwordDecoration,
       ),
     );
-  }
-
-  /*PasswordForm password() {
-    return PasswordForm();
   }*/
+
+  PasswordForm password() {
+    return PasswordForm(
+      minlength: 6,
+      acceptablelength: 8,
+    );
+  }
 
   //Birth date picker
   Padding birthdatePicker() {
@@ -260,10 +265,13 @@ class _AccountRegistration extends State<AccountRegistration> {
     if (!widget.isAgreementCheckVisible) {
       agreementAccepted = true;
     }
+    if (!widget.isEmailVisible) {
+      emailValid = true;
+    }
 
     return TextButton(
       //TODO: check for both agreement bool and password bool
-      onPressed: agreementAccepted && emailValid
+      onPressed: agreementAccepted && emailValid //&& passwordAccepted
           ? widget.onButtonClick
           : null, //enabled button only if it should be enabled
       child: Text(widget.buttonText),
