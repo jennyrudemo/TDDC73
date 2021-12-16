@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 class PasswordForm extends StatefulWidget {
   final int minlength;
   final int acceptablelength;
+  bool passwordValid = false;
 
-  const PasswordForm(
+  PasswordForm(
       {Key? key,
       required this.minlength,
       required this.acceptablelength,
-      passwordAcceptable})
+      passwordValid})
       : super(key: key);
 
   @override
@@ -17,8 +18,6 @@ class PasswordForm extends StatefulWidget {
     return PasswordFormState();
   }
 }
-
-bool passwordAcceptable = false;
 
 class PasswordFormState extends State<PasswordForm> {
   // ignore: unused_field
@@ -84,11 +83,11 @@ class PasswordFormState extends State<PasswordForm> {
         ]);
   }
 
-  void checkOk() {
-    if (_strength < 1 / 2) {
-      passwordAcceptable = true;
-    }
-  }
+  // void checkOk() {
+  //   if (_strength < 1 / 2) {
+  //     passwordValid = true;
+  //   }
+  // }
 
   void _checkPassword(
     value,
@@ -109,17 +108,20 @@ class PasswordFormState extends State<PasswordForm> {
       setState(() {
         _strength = 2 / 4;
         _displayText = "Your Password is acceptable but not strong";
+        widget.passwordValid = true;
       });
     } else {
       if (!letExp.hasMatch(_password) || !numExp.hasMatch(_password)) {
         setState(() {
           _strength = 3 / 4;
           _displayText = "Your Password is Strong";
+          widget.passwordValid = true;
         });
       } else {
         setState(() {
           _strength = 1;
           _displayText = "Your Password is great";
+          widget.passwordValid = true;
         });
       }
     }
