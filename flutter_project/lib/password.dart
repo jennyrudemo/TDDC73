@@ -43,7 +43,9 @@ class PasswordFormState extends State<PasswordForm> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Column(children: [
                 TextField(
-                    onChanged: (value) => _checkPassword(value),
+                    onChanged: (value) {
+                      _checkPassword(value);
+                    },
                     //controller: passwordController,
                     //onChanged: validate(),
                     obscureText: true,
@@ -98,11 +100,13 @@ class PasswordFormState extends State<PasswordForm> {
       setState(() {
         _strength = 0;
         _displayText = "Please enter your passwords";
+        widget.passwordValid = false;
       });
     } else if (_password.length < widget.minlength) {
       setState(() {
         _strength = 1 / 4;
         _displayText = "Your Password is too short";
+        widget.passwordValid = false;
       });
     } else if (_password.length < widget.acceptablelength) {
       setState(() {

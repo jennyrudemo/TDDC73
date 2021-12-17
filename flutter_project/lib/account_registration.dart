@@ -105,6 +105,7 @@ class _AccountRegistration extends State<AccountRegistration> {
   String emailError = "";
   bool emailValid = false;
   bool passwordAccepted = false;
+  bool allChecksOK = false;
 
   Padding name() {
     return Padding(
@@ -206,12 +207,10 @@ class _AccountRegistration extends State<AccountRegistration> {
     );
   }*/
 
-  PasswordForm password() {
-    return PasswordForm(
-      minlength: 6,
-      acceptablelength: 8,
-    );
-  }
+  PasswordForm password = PasswordForm(
+    minlength: 6,
+    acceptablelength: 8,
+  );
 
   //Birth date picker
   Padding birthdatePicker() {
@@ -259,9 +258,8 @@ class _AccountRegistration extends State<AccountRegistration> {
     );
   }
 
-  //Button
-  TextButton registerAccountButton() {
-    //If the agreement checkbox is not visible, the accepted variable is assumed true
+  //Check button
+  TextButton checkerButton() {
     if (!widget.isAgreementCheckVisible) {
       agreementAccepted = true;
     }
@@ -270,8 +268,29 @@ class _AccountRegistration extends State<AccountRegistration> {
     }
 
     return TextButton(
+      onPressed: () {
+        setState(() {
+          passwordAccepted = password.passwordValid;
+          print(passwordAccepted);
+
+          if (passwordAccepted && emailValid && agreementAccepted) {
+            allChecksOK = true;
+          } else {
+            allChecksOK = false;
+          }
+        });
+      },
+      child: Text('Check'),
+    );
+  }
+
+  //Button
+  TextButton registerAccountButton() {
+    //If the agreement checkbox is not visible, the accepted variable is assumed true
+
+    return TextButton(
       //TODO: check for both agreement bool and password bool
-      onPressed: agreementAccepted && emailValid //&& passwordAccepted
+      onPressed: allChecksOK //&& passwordAccepted
           ? widget.onButtonClick
           : null, //enabled button only if it should be enabled
       child: Text(widget.buttonText),
@@ -305,10 +324,15 @@ class _AccountRegistration extends State<AccountRegistration> {
             //Phone number field
             widget.isPhoneNumberVisible ? phoneNumber() : Container(),
             username(),
-            password(),
+            password,
             //Agreement checkbox
             widget.isAgreementCheckVisible ? checkBoxContainer() : Container(),
-            registerAccountButton(),
+            Row(
+              children: [
+                checkerButton(),
+                registerAccountButton(),
+              ],
+            ),
           ],
         ),
       ),
