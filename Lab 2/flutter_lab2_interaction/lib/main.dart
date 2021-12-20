@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
@@ -48,12 +50,21 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
   String cvvHint = 'XXX';
 
   bool _isAmex = false;
-  bool get isAmex => _isAmex;
+  //bool get isAmex => _isAmex; //necessary?
+  String expiryDateText = "MM/YY";
 
   //_MyHomePageState.instance();
 
   void changeAmexStatus(bool status) {
     _isAmex = status;
+    notifyListeners();
+  }
+
+  void changeExpiryDate(DateTime date) {
+    String month = date.month.toString();
+    String year =
+        date.year.toString().replaceFirst('20', ''); //remove first two digits
+    expiryDateText = "$month/$year";
     notifyListeners();
   }
 
@@ -68,71 +79,8 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
     super.initState();
   }
 
-//Gamla variablar
-  DateTime? selectedDate;
-  String displayDate = "";
-
   @override
   Widget build(BuildContext context) {
-    //bool isAmex = false;
-    String cvvText = 'XXX';
-    String data = "not amex";
-
-// Test
-/******************************* */
-    var MonthSelected = 'Month'; //Richard la till
-    var YearSelected = 'Year'; //Richard la till
-    var months = [
-      //Richard la till
-      'Month',
-      '01',
-      '02',
-      '03',
-      '04',
-      '05',
-      '06',
-      '07',
-      '08',
-      '09',
-      '10',
-      '11',
-      '12'
-    ];
-    var years = [
-      //Richard la till
-      'Year',
-      '2019',
-      '2020',
-      '2021',
-      '2022',
-      '2023',
-      '2024',
-      '2025',
-      '2026',
-      '2027',
-      '2028',
-      '2029',
-      '2030'
-    ];
-
-//Setstate för changedYear för dropdownknapp
-    // void dropDownListItemChangedMonth(String newItem) {
-    //   //Richard la till
-    //   setState(() {
-    //     this.MonthSelected = newItem;
-    //   });
-    // }
-
-//Setstate för changedYear för dropdownknapp
-    // void dropDownListItemChangedYear(String newItem) {
-    //   //Richard la till
-    //   setState(() {
-    //     this.YearSelected = newItem;
-    //   });
-    // }
-
-    /******************************* */
-
     SizedBox cvvBox(bool amexStatus) {
       return SizedBox(
         width: MediaQuery.of(context).size.width * 0.3,
@@ -141,27 +89,25 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
           decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'CVV',
-              hintText: amexStatus
-                  ? 'XXXX'
-                  : 'XXX' //uppdateras inte när isAmex ändras :(
-              ),
-          maxLength: amexStatus ? 4 : 3, // funkar inte :(
+              hintText: amexStatus ? 'XXXX' : 'XXX'),
+          maxLength: amexStatus ? 4 : 3,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           onChanged: (value) {
-            //flips the card, but only we typing has started
-            //isCvvFocused = true;
             setState(() {
               cvvCode = value;
             });
           },
           onTap: () {
             setState(() {
+              //flips the card
               isCvvFocused = true;
             });
           },
         ),
       );
     }
+
+    DateTime selectedDate = DateTime.now(); //initial date
 
     return ChangeNotifierProvider<_MyHomePageState>(
         create: (context) => _MyHomePageState(),
@@ -178,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
                   children: <Widget>[
                     CreditCardWidget(
                       cardNumber: cardNumber,
-                      expiryDate: expiryDate,
+                      expiryDate: expiryDateText,
                       cardHolderName: cardHolderName,
                       cvvCode: cvvCode,
                       showBackView:
@@ -231,266 +177,121 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
                     ),
 
                     //Number field
-                    TextFormField(
-                      obscureText: false,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Number',
-                        hintText: 'XXXX XXXX XXXX XXXX',
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                      child: TextFormField(
+                        obscureText: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Number',
+                          hintText: 'XXXX XXXX XXXX XXXX',
+                        ),
+                        //Shows the correct keyboard type
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                        ],
+                        maxLength: 16,
+                        //Ensure max length is kept
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        onChanged: (value) {
+                          setState(() {
+                            cardNumber = value;
+                            //Check if the card is of brand American Express
+                            if (cardNumber.startsWith('34') ||
+                                cardNumber.startsWith('37')) {
+                              context
+                                  .read<_MyHomePageState>()
+                                  .changeAmexStatus(true);
+                            } else {
+                              context
+                                  .read<_MyHomePageState>()
+                                  .changeAmexStatus(false);
+                            }
+                          });
+                        },
+                        //make sure credit card flips
+                        onTap: () {
+                          setState(() {
+                            isCvvFocused = false;
+                          });
+                        },
                       ),
-                      //controller: MaskedTextController(mask: '0000 0000 0000 0000'),
-                      //Shows the correct keyboard type
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      maxLength: 16,
-                      //Ensure max length is kept
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      onChanged: (value) {
-                        setState(() {
-                          cardNumber = value;
-                          //Check if the card is of brand American Express
-                          if (cardNumber.startsWith('34') ||
-                              cardNumber.startsWith('37')) {
-                            context
-                                .read<_MyHomePageState>()
-                                .changeAmexStatus(true);
-                          } else {
-                            context
-                                .read<_MyHomePageState>()
-                                .changeAmexStatus(false);
-                          }
-                        });
-                      },
-                      //make sure credit card flips
-                      onTap: () {
-                        setState(() {
-                          isCvvFocused = false;
-                        });
-                      },
                     ),
 
                     //Date picker
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        GestureDetector(
-                            //TODO: fix date picker
-                            //make sure credit card flips
-                            onTap: () {
-                              print("tapped");
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          OutlinedButton(
+                            child: Selector<_MyHomePageState, String>(
+                                selector: (_, notifier) =>
+                                    notifier.expiryDateText,
+                                builder: (_, value, __) => Text(
+                                    "$expiryDateText",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16.0))),
+                            onPressed: () {
+                              //Flips card
                               setState(() {
                                 isCvvFocused = false;
                               });
+                              showMonthPicker(
+                                context: context,
+                                firstDate: DateTime.now(),
+                                initialDate: DateTime.now(),
+                              ).then((date) {
+                                if (date != null) {
+                                  setState(() {
+                                    selectedDate = date;
+                                    changeExpiryDate(selectedDate);
+                                  });
+                                }
+                              });
                             },
-                            child: SizedBox(
-                              //width: MediaQuery.of(context).size.width * 0.5,
-                              child: TextButton(
-                                  child: Text("selecteddate"),
-                                  onPressed: () {
-                                    showMonthPicker(
-                                      context: context,
-                                      firstDate:
-                                          DateTime(DateTime.now().year - 1, 5),
-                                      lastDate:
-                                          DateTime(DateTime.now().year + 1, 9),
-                                      initialDate: DateTime.now(),
-                                    ).then((date) {
-                                      if (date != null) {
-                                        setState(() {
-                                          selectedDate = date;
-                                          displayDate = selectedDate.toString();
-                                          print(displayDate);
-                                          //notifyListeners();
-                                        });
-                                      }
-                                    });
-                                  }),
-
-                              //Test med dropdown
-
-                              /******************************* */
-
-                              /*  child: DropdownButton<String>(
-                                  //Richard la till
-                                  //funktion för att välja månad
-                                  underline: SizedBox(),
-                                  // menuMaxHeight: 300,
-                                  items:
-                                      // ignore: non_constant_identifier_names
-                                      months.map((String M_dropDownStringItem) {
-                                    return DropdownMenuItem<String>(
-                                      value: M_dropDownStringItem,
-                                      child: Text(M_dropDownStringItem),
-                                      //    alignment: AlignmentDirectional.center,
-                                    );
-                                  }).toList(),
-                                  // ignore: non_constant_identifier_names
-                                  onChanged: (String? M_newValueSelected) {
-                                    dropDownListItemChangedMonth(
-                                        M_newValueSelected);
-                                    m_expiryDate = M_newValueSelected;
-                                    if (M_newValueSelected == 'Month') {
-                                      m_expiryDate = "MM";
-                                    }
-                                  },
-                                  onTap: () {
-                                    //if (!cardKey.currentState.isFront) {
-                                    //null safety
-
-                                    //currentState.toggleCard();
-                                    //}
-                                  },
-                                  value: MonthSelected,
-                                  hint: ButtonTheme(
-                                    alignedDropdown: true,
-                                    child: DropdownButton<String>(
-                                      //Richard la till
-                                      //funktion för att välja år
-                                      underline: SizedBox(),
-                                      //  menuMaxHeight: 300,
-                                      items:
-                                          // ignore: non_constant_identifier_names
-                                          years.map(
-                                              (String Y_dropDownStringItem) {
-                                        return DropdownMenuItem<String>(
-                                          value: Y_dropDownStringItem,
-                                          child: Text(Y_dropDownStringItem),
-                                          //  alignment: AlignmentDirectional.center,
-                                        );
-                                      }).toList(),
-                                      // ignore: non_constant_identifier_names
-                                      onChanged: (String? Y_newValueSelected) {
-                                        dropDownListItemChangedYear(
-                                            Y_newValueSelected);
-                                        y_expiryDate = Y_newValueSelected[2] +
-                                            YearSelected[3];
-                                        if (Y_newValueSelected == 'Year') {
-                                          y_expiryDate = "YY";
-                                        }
-                                      },
-                                      onTap: () {
-                                        // if (!cardKey.currentState.isFront) {
-
-                                        // }
-                                      },
-                                      value: YearSelected,
-                                    ),
-                                  )),
-                            )*/
-                              //Richard la till
-                              //Text för att displaya text
-                              /*    Text(
-                                          m_expiryDate + '/' + y_expiryDate,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                              color: Colors.white),
-                                        ),*/
-
-                              /*DropdownDatePicker(
-                              firstDate: ValidDate(
-                                year: DateTime.now().year,
-                                month: DateTime.now().month,
-                                day: DateTime.now().day,
-                              ),
-                              lastDate: ValidDate(
-                                year: DateTime.now().year + 10,
-                                month: 1,
-                                day: 1,
-                              ),
-                              ascending: false,
-                              dateFormat: DateFormat.ymd,
-                            ),*/
-                            )),
-
-                        /******************************* */
-
-                        //CVV field
-                        Selector<_MyHomePageState, bool>(
-                            selector: (_, notifier) => notifier.isAmex,
-                            builder: (_, value, __) => cvvBox(value)),
-
-                        // Selector<_MyHomePageState, bool>(
-                        //     selector: (_, notifier) => notifier.isAmex,
-                        //     builder: (_, value, __) => cvvBox(value)),
-                      ],
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(width: 1.0, color: Colors.grey),
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.6, 60),
+                            ),
+                          ),
+                          //CVV field
+                          Selector<_MyHomePageState, bool>(
+                              selector: (_, notifier) => notifier._isAmex,
+                              builder: (_, value, __) => cvvBox(value)),
+                        ],
+                      ),
                     ),
-                    // TextButton(onPressed: (){
-                    //   show
-                    // }), child: child)
 
                     //Cardholder
-                    TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Card Holder',
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                      child: TextFormField(
+                        obscureText: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Card Holder',
+                        ),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[a-z A-Z]")),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            cardHolderName = value;
+                          });
+                        },
+                        //make sure credit card flips
+                        onTap: () {
+                          setState(() {
+                            isCvvFocused = false;
+                          });
+                        },
                       ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          cardHolderName = value;
-                        });
-                      },
-                      //make sure credit card flips
-                      onTap: () {
-                        setState(() {
-                          isCvvFocused = false;
-                        });
-                      },
                     ),
-
-                    //Byt ut detta mot egna komponenter
-                    // CreditCardForm(
-                    //   cardHolderName: cardHolderName,
-                    //   expiryDate: expiryDate,
-                    //   cardNumber: cardNumber,
-                    //   cvvCode: cvvCode,
-                    //   formKey: formKey, // Required
-                    //   onCreditCardModelChange: (CreditCardModel data) {
-                    //     setState(() {
-                    //       cardHolderName = data.cardHolderName;
-                    //       //Hur ändrar vi på det? Finns restriktioner i form-widget
-                    //       cvvCode = data.cvvCode;
-                    //       //TODO: Check if date is valid (month not over 12 and under 1)
-                    //       //Finns i form-widget. Hur kommunicerar vi det hit?
-                    //       expiryDate = data.expiryDate;
-                    //       cardNumber = data.cardNumber;
-                    //       isCvvFocused = data.isCvvFocused;
-                    //     });
-                    //   }, // Required
-                    //   themeColor: Colors.red,
-                    //   obscureCvv: true,
-                    //   obscureNumber: false,
-                    //   isHolderNameVisible: true,
-                    //   isCardNumberVisible: true,
-                    //   isExpiryDateVisible: true,
-                    //   //Testa detta
-                    //   dateValidationMessage: "Incorrect date!",
-                    //   cardNumberDecoration: const InputDecoration(
-                    //     border: OutlineInputBorder(),
-                    //     labelText: 'Number',
-                    //     hintText: 'XXXX XXXX XXXX XXXX',
-                    //   ),
-                    //   expiryDateDecoration: const InputDecoration(
-                    //     border: OutlineInputBorder(),
-                    //     labelText: 'Expired Date',
-                    //     hintText: 'MM/YY',
-                    //   ),
-                    //   cvvCodeDecoration: const InputDecoration(
-                    //     border: OutlineInputBorder(),
-                    //     labelText: 'CVV',
-                    //     hintText: 'XXX',
-                    //   ),
-                    //   cardHolderDecoration: const InputDecoration(
-                    //     border: OutlineInputBorder(),
-                    //     labelText: 'Card Holder',
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
