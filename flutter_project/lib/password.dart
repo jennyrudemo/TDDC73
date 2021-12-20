@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_password_strength/flutter_password_strength.dart';
 
 class PasswordForm extends StatefulWidget {
+  //input variables
   final int minlength;
   final int acceptablelength;
   bool passwordValid = false;
@@ -20,12 +20,9 @@ class PasswordForm extends StatefulWidget {
 }
 
 class PasswordFormState extends State<PasswordForm> {
-  // ignore: unused_field
-  //late String? _password = "";
-  double _strength = 0;
+  //checkar hur "starkt lösenordet är utifrån void "checkpassword"
+  double _styrka = 0;
 
-  //String pattern =
-  //  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   RegExp numExp = RegExp(r".*[0-9].*");
   RegExp letExp = RegExp(r".*[A-Za-z].*");
 
@@ -36,18 +33,17 @@ class PasswordFormState extends State<PasswordForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
+        //widget för password
         children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Column(children: [
                 TextField(
+                    //läser av input och samtidigt skickar det till checkpassword
                     onChanged: (value) {
                       _checkPassword(value);
                     },
-                    //controller: passwordController,
-                    //onChanged: validate(),
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
@@ -56,20 +52,24 @@ class PasswordFormState extends State<PasswordForm> {
                         labelText: 'Enter your password',
                         hintText: "Password",
                         enabledBorder: OutlineInputBorder(
+                            //style för textfield
                             borderRadius:
                                 BorderRadius.all(Radius.circular(12.0)),
                             borderSide: BorderSide(color: Colors.lightBlue)))),
                 const SizedBox(
                   height: 30,
                 ),
+                //själva "styrka-,mätaren",
+                //visar utifrån vad checkpassword har för strength hur mycket ifylld "LinearProgressIndicator" kommer vara
+                //denna baseras också på "value" som är inputen
                 LinearProgressIndicator(
-                  value: _strength,
+                  value: _styrka,
                   backgroundColor: Colors.grey[300],
-                  color: _strength <= 1 / 4
+                  color: _styrka <= 1 / 4
                       ? Colors.red
-                      : _strength == 2 / 4
+                      : _styrka == 2 / 4
                           ? Colors.yellow
-                          : _strength == 3 / 4
+                          : _styrka == 3 / 4
                               ? Colors.blue
                               : Colors.green,
                   minHeight: 15,
@@ -85,45 +85,40 @@ class PasswordFormState extends State<PasswordForm> {
         ]);
   }
 
-  // void checkOk() {
-  //   if (_strength < 1 / 2) {
-  //     passwordValid = true;
-  //   }
-  // }
-
   void _checkPassword(
     value,
   ) {
+    //tar in inputen men räknar inte med whitespace
     String _password = value.trim();
 
     if (_password.isEmpty) {
       setState(() {
-        _strength = 0;
+        _styrka = 0;
         _displayText = "Please enter your passwords";
         widget.passwordValid = false;
       });
     } else if (_password.length < widget.minlength) {
       setState(() {
-        _strength = 1 / 4;
+        _styrka = 1 / 4;
         _displayText = "Your Password is too short";
         widget.passwordValid = false;
       });
     } else if (_password.length < widget.acceptablelength) {
       setState(() {
-        _strength = 2 / 4;
+        _styrka = 2 / 4;
         _displayText = "Your Password is acceptable but not strong";
         widget.passwordValid = true;
       });
     } else {
       if (!letExp.hasMatch(_password) || !numExp.hasMatch(_password)) {
         setState(() {
-          _strength = 3 / 4;
+          _styrka = 3 / 4;
           _displayText = "Your Password is Strong";
           widget.passwordValid = true;
         });
       } else {
         setState(() {
-          _strength = 1;
+          _styrka = 1;
           _displayText = "Your Password is great";
           widget.passwordValid = true;
         });
