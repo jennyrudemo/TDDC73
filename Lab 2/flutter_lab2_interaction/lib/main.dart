@@ -6,9 +6,7 @@ import 'package:dropdown_date_picker/dropdown_date_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,7 +23,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget with ChangeNotifier {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   final String title;
 
@@ -67,11 +68,70 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
     super.initState();
   }
 
+//Gamla variablar
+  DateTime? selectedDate;
+  String displayDate = "";
+
   @override
   Widget build(BuildContext context) {
     //bool isAmex = false;
     String cvvText = 'XXX';
     String data = "not amex";
+
+// Test
+/******************************* */
+    var MonthSelected = 'Month'; //Richard la till
+    var YearSelected = 'Year'; //Richard la till
+    var months = [
+      //Richard la till
+      'Month',
+      '01',
+      '02',
+      '03',
+      '04',
+      '05',
+      '06',
+      '07',
+      '08',
+      '09',
+      '10',
+      '11',
+      '12'
+    ];
+    var years = [
+      //Richard la till
+      'Year',
+      '2019',
+      '2020',
+      '2021',
+      '2022',
+      '2023',
+      '2024',
+      '2025',
+      '2026',
+      '2027',
+      '2028',
+      '2029',
+      '2030'
+    ];
+
+//Setstate för changedYear för dropdownknapp
+    // void dropDownListItemChangedMonth(String newItem) {
+    //   //Richard la till
+    //   setState(() {
+    //     this.MonthSelected = newItem;
+    //   });
+    // }
+
+//Setstate för changedYear för dropdownknapp
+    // void dropDownListItemChangedYear(String newItem) {
+    //   //Richard la till
+    //   setState(() {
+    //     this.YearSelected = newItem;
+    //   });
+    // }
+
+    /******************************* */
 
     SizedBox cvvBox(bool amexStatus) {
       return SizedBox(
@@ -216,17 +276,120 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
-                          //TODO: fix date picker
-                          //make sure credit card flips
-                          onTap: () {
-                            print("tapped");
-                            setState(() {
-                              isCvvFocused = false;
-                            });
-                          },
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: DropdownDatePicker(
+                            //TODO: fix date picker
+                            //make sure credit card flips
+                            onTap: () {
+                              print("tapped");
+                              setState(() {
+                                isCvvFocused = false;
+                              });
+                            },
+                            child: SizedBox(
+                              //width: MediaQuery.of(context).size.width * 0.5,
+                              child: TextButton(
+                                  child: Text("selecteddate"),
+                                  onPressed: () {
+                                    showMonthPicker(
+                                      context: context,
+                                      firstDate:
+                                          DateTime(DateTime.now().year - 1, 5),
+                                      lastDate:
+                                          DateTime(DateTime.now().year + 1, 9),
+                                      initialDate: DateTime.now(),
+                                    ).then((date) {
+                                      if (date != null) {
+                                        setState(() {
+                                          selectedDate = date;
+                                          displayDate = selectedDate.toString();
+                                          print(displayDate);
+                                          //notifyListeners();
+                                        });
+                                      }
+                                    });
+                                  }),
+
+                              //Test med dropdown
+
+                              /******************************* */
+
+                              /*  child: DropdownButton<String>(
+                                  //Richard la till
+                                  //funktion för att välja månad
+                                  underline: SizedBox(),
+                                  // menuMaxHeight: 300,
+                                  items:
+                                      // ignore: non_constant_identifier_names
+                                      months.map((String M_dropDownStringItem) {
+                                    return DropdownMenuItem<String>(
+                                      value: M_dropDownStringItem,
+                                      child: Text(M_dropDownStringItem),
+                                      //    alignment: AlignmentDirectional.center,
+                                    );
+                                  }).toList(),
+                                  // ignore: non_constant_identifier_names
+                                  onChanged: (String? M_newValueSelected) {
+                                    dropDownListItemChangedMonth(
+                                        M_newValueSelected);
+                                    m_expiryDate = M_newValueSelected;
+                                    if (M_newValueSelected == 'Month') {
+                                      m_expiryDate = "MM";
+                                    }
+                                  },
+                                  onTap: () {
+                                    //if (!cardKey.currentState.isFront) {
+                                    //null safety
+
+                                    //currentState.toggleCard();
+                                    //}
+                                  },
+                                  value: MonthSelected,
+                                  hint: ButtonTheme(
+                                    alignedDropdown: true,
+                                    child: DropdownButton<String>(
+                                      //Richard la till
+                                      //funktion för att välja år
+                                      underline: SizedBox(),
+                                      //  menuMaxHeight: 300,
+                                      items:
+                                          // ignore: non_constant_identifier_names
+                                          years.map(
+                                              (String Y_dropDownStringItem) {
+                                        return DropdownMenuItem<String>(
+                                          value: Y_dropDownStringItem,
+                                          child: Text(Y_dropDownStringItem),
+                                          //  alignment: AlignmentDirectional.center,
+                                        );
+                                      }).toList(),
+                                      // ignore: non_constant_identifier_names
+                                      onChanged: (String? Y_newValueSelected) {
+                                        dropDownListItemChangedYear(
+                                            Y_newValueSelected);
+                                        y_expiryDate = Y_newValueSelected[2] +
+                                            YearSelected[3];
+                                        if (Y_newValueSelected == 'Year') {
+                                          y_expiryDate = "YY";
+                                        }
+                                      },
+                                      onTap: () {
+                                        // if (!cardKey.currentState.isFront) {
+
+                                        // }
+                                      },
+                                      value: YearSelected,
+                                    ),
+                                  )),
+                            )*/
+                              //Richard la till
+                              //Text för att displaya text
+                              /*    Text(
+                                          m_expiryDate + '/' + y_expiryDate,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
+                                              color: Colors.white),
+                                        ),*/
+
+                              /*DropdownDatePicker(
                               firstDate: ValidDate(
                                 year: DateTime.now().year,
                                 month: DateTime.now().month,
@@ -239,14 +402,19 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
                               ),
                               ascending: false,
                               dateFormat: DateFormat.ymd,
-                            ),
-                          ),
-                        ),
+                            ),*/
+                            )),
+
+                        /******************************* */
 
                         //CVV field
                         Selector<_MyHomePageState, bool>(
                             selector: (_, notifier) => notifier.isAmex,
                             builder: (_, value, __) => cvvBox(value)),
+
+                        // Selector<_MyHomePageState, bool>(
+                        //     selector: (_, notifier) => notifier.isAmex,
+                        //     builder: (_, value, __) => cvvBox(value)),
                       ],
                     ),
                     // TextButton(onPressed: (){
