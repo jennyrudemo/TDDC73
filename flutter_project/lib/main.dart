@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/account_registration.dart';
-import 'package:flutter_project/password.dart';
+//import 'package:flutter_project/password.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,13 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
       //body: const PasswordForm(),
       body: AccountRegistration(
-        birthDateLabel: "Födelsedatum",
+        //isAgreementCheckVisible: false, //Possible to decide what fields to use
+        //birthDateLabel: "Födelsedatum", //Possible to change labels
         onButtonClick: () {
           print('Nothing happens, this is just a sample application');
         },
       ),
-      // PasswordForm( password: ""), //TODO: Lägg in denna så att den fungerar med accountregistration
-      //body: AccountRegistration(),
     );
   }
 }
