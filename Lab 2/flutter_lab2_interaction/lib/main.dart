@@ -8,9 +8,7 @@ import 'package:dropdown_date_picker/dropdown_date_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,7 +25,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget with ChangeNotifier {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   final String title;
 
@@ -80,10 +81,6 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
 
   @override
   Widget build(BuildContext context) {
-    //bool isAmex = false;
-    String cvvText = 'XXX';
-    String data = "not amex";
-
     SizedBox cvvBox(bool amexStatus) {
       return SizedBox(
         width: MediaQuery.of(context).size.width * 0.3,
@@ -92,11 +89,8 @@ class _MyHomePageState extends State<MyHomePage> with ChangeNotifier {
           decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'CVV',
-              hintText: amexStatus
-                  ? 'XXXX'
-                  : 'XXX' //uppdateras inte när isAmex ändras :(
-              ),
-          maxLength: amexStatus ? 4 : 3, // funkar inte :(
+              hintText: amexStatus ? 'XXXX' : 'XXX'),
+          maxLength: amexStatus ? 4 : 3,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           onChanged: (value) {
             setState(() {
