@@ -91,6 +91,8 @@ class PasswordFormState extends State<PasswordForm> {
     //tar in inputen men räknar inte med whitespace
     String _password = value.trim();
 
+// conditions för vilket meddelande som kommer att visas för lösenordet, baserat på styrka
+// i passwordvalid ändras widgetens "värde" baserat på om lösenordet är accepterat eller inte
     if (_password.isEmpty) {
       setState(() {
         _styrka = 0;
