@@ -1,3 +1,6 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+// to compensate for dropdown_date_picker not being null-safe
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
