@@ -192,7 +192,7 @@ class _AccountRegistration extends State<AccountRegistration> {
     //otherwise the default list.
     List<String> genders = widget.genderList;
 
-    //Creates dropdown list
+    //Creates dropdown list from List "genderlist in widget"
     List<DropdownMenuItem<String>> genderList =
         genders.map<DropdownMenuItem<String>>((String value) {
       return DropdownMenuItem<String>(

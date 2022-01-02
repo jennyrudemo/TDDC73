@@ -20,27 +20,27 @@ class PasswordForm extends StatefulWidget {
 }
 
 class PasswordFormState extends State<PasswordForm> {
-  //checkar hur "starkt lösenordet är utifrån void "checkpassword"
+  // "_styrka" checks how strong the password, from void function checkpassword
   double _styrka = 0;
 
+  //expression for any numbers
   RegExp numExp = RegExp(r".*[0-9].*");
+  //expression for any lower or upper characters
   RegExp letExp = RegExp(r".*[A-Za-z].*");
 
+  //default display text
   String _displayText = "please enter a password";
-
-  var passwordController = TextEditingController();
-  String passwordError = "";
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start,
-        //widget för password
+        //widget for password
         children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Column(children: [
                 TextField(
-                    //läser av input och samtidigt skickar det till checkpassword
+                    //reads input and sends to checkpassword meantime
                     onChanged: (value) {
                       _checkPassword(value);
                     },
@@ -52,16 +52,18 @@ class PasswordFormState extends State<PasswordForm> {
                         labelText: 'Enter your password',
                         hintText: "Password",
                         enabledBorder: OutlineInputBorder(
-                            //style för textfield
+                            //style for borders
                             borderRadius:
                                 BorderRadius.all(Radius.circular(12.0)),
                             borderSide: BorderSide(color: Colors.lightBlue)))),
+
                 const SizedBox(
+                  //creates space between password and strengthmeter
                   height: 30,
                 ),
-                //själva "styrka-,mätaren",
-                //visar utifrån vad checkpassword har för strength hur mycket ifylld "LinearProgressIndicator" kommer vara
-                //denna baseras också på "value" som är inputen
+                //the strength meter
+                //displays what strength password has from checkpassword
+                //depends on the input "value"
                 LinearProgressIndicator(
                   value: _styrka,
                   backgroundColor: Colors.grey[300],
@@ -75,6 +77,7 @@ class PasswordFormState extends State<PasswordForm> {
                   minHeight: 15,
                 ),
                 const SizedBox(
+                  //creates space between strengthmeter and text
                   height: 20,
                 ),
                 Text(_displayText, style: const TextStyle(fontSize: 18)),
@@ -85,14 +88,12 @@ class PasswordFormState extends State<PasswordForm> {
         ]);
   }
 
-  void _checkPassword(
-    value,
-  ) {
-    //tar in inputen men räknar inte med whitespace
+  void _checkPassword(value) {
+    // takes input argument and trims (removes whitespace)
     String _password = value.trim();
 
-// conditions för vilket meddelande som kommer att visas för lösenordet, baserat på styrka
-// i passwordvalid ändras widgetens "värde" baserat på om lösenordet är accepterat eller inte
+// conditions for what message will be displayed and the size of styrka
+// will be set as acceptable to register if conditions fulfill 2/4
     if (_password.isEmpty) {
       setState(() {
         _styrka = 0;

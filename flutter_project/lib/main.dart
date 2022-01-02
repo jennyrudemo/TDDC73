@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/account_registration.dart';
 //import 'package:flutter_project/password.dart';
 
+// Declares myApp function
 void main() {
   runApp(const MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
