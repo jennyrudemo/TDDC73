@@ -2,16 +2,16 @@
 
 > This getting started guide is aimed at people who have experience programming but who have not worked  with flutter. 
 
-# What is Flutter?
+## What is Flutter?
 > Flutter is a UI-based development kit devolped by Google which is great for app development. Flutter is using the programming language Dart. To first get Flutter
 running, all the necessary steps to install the SDK can be found in the documentation [here] (https://docs.flutter.dev/get-started/install).
 
-# Create the App
+## Create the App
 
 With the SDK installed the program can be run in several IDE (integrated development environments) such as Android Studio, IntelliJ, VS Code, or Emacs. Other 
 editors will be okay but won't necessary have the same built in support at these IDEs. How the app is set up can be found [here] (https://docs.flutter.dev/get-started/test-drive?tab=androidstudio).
 
-# Simple Layout of components / widgets
+## Simple Layout of components / widgets
 
 The following code snippet displays how an app displaying "Hello World" is written. The layout of Flutter mainly relies on compenents called "Widgets". 
 Widgets can have different forms depending on their interactions. The main here calls on a class with extended widget called StatelessWidget. 
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-# Basic interaction with listener / callbacks functions
+## Basic interaction with listener / callbacks functions
 
 Flutter is mainly constructed with familiarity to other Object Oriented Programming (OOP) languages. The functionality of the app looks similar to how Java and 
 Javascript funtions. With the basic layout of the application implemented, basic functions can easily be called by calling them inside widgets or inside the main. 
@@ -73,7 +73,7 @@ void main() {
 
 
 
-# Navigation between different screens
+## Navigation between different screens
 
 ```
 class FirstRoute extends StatelessWidget {
