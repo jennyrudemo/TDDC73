@@ -9,3 +9,5 @@ Laboration 2 - Interaktion (flutter)
 Laboration 3 - Kommunicera med github (flutter)
 
 Project - Minimal SDK for Password and Accountregistration (flutter)
+
+"Gettingstarted.md" displays a guide on how to get started with flutter. 
