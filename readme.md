@@ -1,6 +1,6 @@
-# Read Me
+# TDDC73 Interaction Programming, LIU
 
-The laborations and projects was made as part of the course TDDC73, LiU. 
+The laborations and projects was made as part of the course TDDC73.
 
 Laboration 1 - Layout in Kotlin+xml, Flutter och React-Native.
 
