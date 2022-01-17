@@ -4,12 +4,12 @@
 
 ## What is Flutter?
 > Flutter is a UI-based development kit devolped by Google which is great for app development. Flutter is using the programming language Dart. To first get Flutter
-running, all the necessary steps to install the SDK can be found in the documentation [here] (https://docs.flutter.dev/get-started/install).
+running, all the necessary steps to install the SDK can be found in the documentation [here](https://docs.flutter.dev/get-started/install).
 
 ## Create the App
 
 With the SDK installed the program can be run in several IDE (integrated development environments) such as Android Studio, IntelliJ, VS Code, or Emacs. Other 
-editors will be okay but won't necessary have the same built in support at these IDEs. How the app is set up can be found [here] (https://docs.flutter.dev/get-started/test-drive?tab=androidstudio).
+editors will be okay but won't necessary have the same built in support at these IDEs. How the app is set up can be found [here](https://docs.flutter.dev/get-started/test-drive?tab=androidstudio).
 
 ## Simple Layout of components / widgets
 
@@ -19,12 +19,8 @@ Stateless is "state" which informs the class that if won't change state. While t
 
 "Widget Build" intializes the application and returns a Materialapp which contains all the inbuilt components inside the Flutter library. The materialapp creates
 instance of Widget app which contains several inbuilt commands. 
-
-1. Title will display the bar address. 
-2. Scaffold home will create a bar around the project. 
-3. While the body is where the primary functions of the scaffold will be displayed. 
-4. Here a child is initialized which creates a widget or "component" for the class. This child can be given extra functionality dependending on what's written
-inside of it. Here the text "Hello world" will be displayed. 
+ 
+Here "Title" will display the bar address. Scaffold home will create a bar around the project. While the body is where the primary functions of the scaffold will be displayed. Here a child is initialized which creates a widget or "component" for the class. This child can be given extra functionality dependending on what's written inside of it. Here the text "Hello world" will be displayed. 
 
 ```
 import 'package:flutter/material.dart';
@@ -75,7 +71,18 @@ void main() {
 
 ## Navigation between different screens
 
+The following code shows two widgets which navigates between two different screens inside the application. All the functionality is done inside the body of the stateless widgets. The widget "FirstRoute" will first call the inbuilt function "MaterialPageRoute" to build SecondRoute.
+
 ```
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MaterialApp(
+    title: 'Navigation Basics',
+    home: FirstRoute(),
+  ));
+}
+
 class FirstRoute extends StatelessWidget {
   const FirstRoute({Key? key}) : super(key: key);
 
@@ -89,7 +96,10 @@ class FirstRoute extends StatelessWidget {
         child: ElevatedButton(
           child: const Text('Open route'),
           onPressed: () {
-            // Navigate to second route when tapped.
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SecondRoute()),
+            );
           },
         ),
       ),
@@ -109,7 +119,7 @@ class SecondRoute extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Navigate back to first route when tapped.
+            Navigator.pop(context);
           },
           child: const Text('Go back!'),
         ),
