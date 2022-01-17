@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
 
 Flutter is mainly constructed with familiarity to other Object Oriented Programming (OOP) languages. The functionality of the app looks similar to how Java and 
 Javascript funtions. With the basic layout of the application implemented, basic functions can easily be called by calling them inside widgets or inside the main. 
-The functionality of these 
+The functionality of the function "customiseGreeting" is creating a function which takes in a a greeting, which specifies a name inside of it. This will then can able to print if called by "print" and suitable variable which is converted into a string. 
 
 ```
 Function customiseGreeting(String greeting) {
